@@ -84,26 +84,6 @@ movement-loop write rate so timing-sensitive features can be diagnosed in real t
 
 ---
 
-## Project structure
-
-```
-GVoid/
-├─ Core/
-│  ├─ GameMemory.cs     RPM/WPM wrapper (UIntPtr addressing, typed read/write helpers)
-│  ├─ Offsets.cs        Resolved layout table + tiny line-based serialization
-│  └─ Resolver.cs       ClrMD: name→offset resolution, entity-name dump, item spawn
-├─ Overlay/
-│  ├─ Program.cs        Entry point (+ `--selftest` headless resolution check)
-│  ├─ MenuOverlay.cs    ImGui tabbed UI, auto-attach, ESP rendering, debug HUD
-│  ├─ Cheats.cs         Feature state + background apply loops
-│  ├─ OffsetClient.cs   In-process bridge to Resolver (attach / names / spawn)
-│  └─ TerrariaOverlay.csproj   Single-file x86 self-contained publish settings
-└─ Helper/
-   └─ OffsetDump        Standalone offset-dumper (legacy two-process design)
-```
-
----
-
 ## Building
 
 Requires the **.NET 8 SDK** (x86 targeting).
