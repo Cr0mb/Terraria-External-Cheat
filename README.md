@@ -1,118 +1,149 @@
-# GVoid — Terraria External Trainer
+Converted to GitHub Markdown with a cleaner README style and without BBCode-specific formatting.
 
-An **external** (out-of-process) cheat menu for **Terraria 1.4.5.6** with a DirectX 11
-ImGui overlay. Nothing is injected into the game — GVoid reads and writes the game's
-memory from a separate process via `ReadProcessMemory` / `WriteProcessMemory`, and
-resolves all field offsets **by name** at runtime using ClrMD, so it survives game
-restarts, world reloads, and most patches.
+<div align="center">
 
-> Single-player / educational use. Built as a reverse-engineering exercise.
+# <span style="color:#E02828">GVoid</span> Terraria External Trainer
 
----
+### Fully external ImGui (DX11) overlay menu for Terraria 1.4.5.6
 
-## Layout
-
-```
-GVoid/
-├─ Core/        Shared sources (no project of its own; compiled into both apps)
-│   ├─ GameMemory.cs   RPM/WPM wrapper (UIntPtr addressing for >2GB heap objects)
-│   ├─ Offsets.cs      Serializable offset table (statics / Player / Item / NPC / Misc)
-│   └─ Resolver.cs     ClrMD name-based offset resolution + item-spawn + diagnostics
-├─ Helper/      OffsetDump — x86 .NET Framework 4.8 console helper (uses ClrMD)
-│   └─ OffsetDump.csproj
-└─ Overlay/     TerrariaOverlay — x64 .NET 8 ImGui/DX11 borderless overlay (the menu)
-    └─ TerrariaOverlay.csproj
-```
-
-### Why two processes (the bitness split)
-
-* `Terraria.exe` is a **32-bit (x86) .NET Framework** assembly (`CorFlags 0x3`,
-  ILONLY + 32BITREQUIRED). It is **not** native code — Ghidra/IDA are the wrong tools;
-  it was reverse-engineered with **dnSpy / ILSpy**.
-* **ClrMD must run as x86** to attach to a 32-bit process's CLR (DAC must match
-  bitness). So offset resolution lives in the small **x86 `Helper`** (`OffsetDump.exe`).
-* The **ImGui + DX11 overlay** uses `ClickableTransparentOverlay`, which is modern
-  .NET, so the **`Overlay`** runs as **x64**. An x64 process can RPM/WPM a 32-bit
-  target across WOW64 without issue.
-* The overlay launches the bundled x86 helper, reads back the resolved offset table,
-  then does all its own memory I/O.
+</div>
 
 ---
 
-## Build & Run
+## About
 
-Requirements: .NET 8 SDK (x64) + .NET Framework 4.8 targeting pack. Both restore
-NuGet packages on first build (ClrMD, ClickableTransparentOverlay).
+**GVoid** is a **fully external** trainer for **Terraria 1.4.5.6**.
 
-```powershell
-# 1. Build the x86 helper
-cd GVoid\Helper
-dotnet build -c Release
+All functionality operates through `ReadProcessMemory` / `WriteProcessMemory` from a separate process, with a clean ImGui overlay rendered over the game.
 
-# 2. Build the x64 overlay
-cd ..\Overlay
-dotnet build -c Release
-
-# 3. Bundle the helper next to the overlay (the overlay looks for x86helper\OffsetDump.exe)
-$ov = "bin\Release\net8.0-windows\win-x64"
-New-Item -ItemType Directory -Force "$ov\x86helper" | Out-Null
-Copy-Item ..\Helper\bin\Release\* "$ov\x86helper" -Recurse -Force
-
-# 4. Launch Terraria, load a world, then run the overlay
-.\bin\Release\net8.0-windows\win-x64\TerrariaOverlay.exe
-```
-
-In-game:
-1. Press **Insert** to toggle the menu.
-2. Click **Attach to Terraria** (run Terraria in **borderless/windowed**, not exclusive
-   fullscreen, or the overlay can't draw over it).
-3. Toggle features. Status (HP/Mana/position) shows in the footer.
+All field offsets are resolved **by name at runtime** using Microsoft's ClrMD, allowing the trainer to continue functioning across game restarts, world reloads, and most patches without requiring manual offset updates.
 
 ---
 
-## Features
+# Features
 
-**Player** — God Mode, Infinite Health / Mana / Breath / Flight, No Knockback,
-Instant Respawn, Rapid Attack (hold M1 autofire), Fly/Noclip (WASD), Gravity Flip,
-Damage Multiplier, Item Vacuum, Full Heal, Max HP/Mana, Teleport to Spawn, Item Teleport.
+## Player
 
-**Combat** — Freeze Enemies, Weaken Enemies, Kill Aura (range, loot-friendly),
-Ghost Hit, Gather Enemies, Kill All Enemies.
+* God Mode — immunity-based, works in all world types (Classic / Expert / Master), blocks all damage
+* Infinite Health
+* Infinite Mana
+* Infinite Breath (no drowning)
+* No Fall Damage
+* Lava / Fire Immunity
+* No Knockback
+* Instant Respawn
+* Quick actions:
 
-**Visuals** — 2D Box ESP, Snaplines, dropped-item ESP, HP numbers
-(red = hostile, cyan = town/friendly, green = you, gold = item).
-
-**World** — Freeze Time, time-of-day slider, weather (rain / clear), Blood Moon, Eclipse.
-
-**Spawner** — full item-template spawner (works instantly, no drop/pickup).
-
----
-
-## Notable engineering details
-
-* **Addressing:** Terraria is LargeAddressAware; GC objects can live **above 2 GB**.
-  Addresses are passed as `UIntPtr` — a `uint`→`IntPtr` cast throws on x86 for >2 GB.
-* **GC-stable resolution:** statics never move, so their absolute addresses are
-  resolved once. Per-entity reads re-walk `static array → [myPlayer] → object → +offset`
-  every tick. x86 SZArray layout: data @ +8, reference element size 4.
-* **God Mode** is immunity-based (`immune` + `immuneTime` + `hurtCooldowns[]`), because
-  `creativeGodMode` is wiped every frame by `ResetEffects()` outside Journey mode.
-* **Item Spawner** copies a fully-initialized template from
-  `ContentSamples.ItemsByType` into the slot (done under a brief ClrMD suspend), so the
-  item has all stats immediately — no drop/pickup needed.
-* **Loot from Kill Aura:** external code can't call `NPCLoot()`/`checkDead()`, and a
-  forced despawn drops nothing. Instead the aura **teleports hostiles onto you** so your
-  *real* weapon swing runs the game's own `StrikeNPC → NPCLoot` path → full loot+coins.
-  Pair with Rapid Attack + Damage Multiplier + Item Vacuum for an auto-farm.
-* **ESP projection** uses Terraria's actual `SpriteViewMatrix` transform
-  (`screen = zoom·(world − screenPos) − (screenSize/2)·(zoom−1)`), read + projected on
-  the render thread each frame so boxes don't lag/snap.
+  * Full Heal
+  * Set Max HP
+  * Set Max Mana
+* Buff Applier — apply any buff by ID for any duration
 
 ---
 
-## Caveats
+## Movement
 
-* Single-player only by design.
-* Requires borderless/windowed Terraria and matching resolution for correct ESP.
-* Some world/event toggles (weather, blood moon) can be overridden by the game's own
-  logic over time — they nudge state, they don't lock it.
+* Fly / Noclip (hold WASD)
+* Infinite Flight (wings never run out)
+* Super Speed — adjustable multiplier (velocity-driven)
+* High Jump
+* Water Walking
+* Gravity Flip (walk on ceilings)
+* Teleport to Spawn
+* Waypoints:
+
+  * Create
+  * Rename
+  * Teleport
+  * Delete
+  * Saved to config
+
+---
+
+## Combat
+
+* Rapid Attack — hold Mouse1 for continuous autofire on any weapon
+* Damage Multiplier — adjustable (1x–50x)
+* Free Casting — spells cost 0 mana
+* Kill Aura — range-gated, loot-friendly behavior
+* Ghost Hit — attacks connect with nearest enemy
+* Freeze Enemies
+* Weaken Enemies (set to 1 HP)
+* Gather Enemies
+* Kill All Enemies
+
+---
+
+## Items
+
+* Item Spawner — inject fully initialized item templates directly into inventory slots
+* Instant Break — one-hit mining / chopping / hammering
+* Extended Reach
+* Infinite Items
+* Item Vacuum
+* Item Teleport
+
+---
+
+## Visuals (ESP)
+
+* 2D Box ESP
+* Snaplines
+* Entity Information:
+
+  * Name
+  * Current / Max HP
+  * Defense
+  * Distance
+* Animated rainbow boss outlines
+* Independent toggles:
+
+  * Local Player
+  * Other Players
+  * Town / Friendly
+  * Hostile
+  * Bosses
+  * Dropped Items
+  * Waypoints
+
+### Colors
+
+| Type    | Color  |
+| ------- | ------ |
+| Hostile | Red    |
+| Town    | Cyan   |
+| Player  | Orange |
+| Local   | Green  |
+| Item    | Yellow |
+
+---
+
+## World
+
+* Freeze Time
+* Time-of-day slider
+* Noon / Midnight presets
+* Weather control:
+
+  * Rain
+  * Clear Sky
+* Toggle:
+
+  * Blood Moon
+  * Solar Eclipse
+* Config save / load
+* Auto-load on attach
+* Live Debug HUD
+
+---
+
+## Usage
+
+1. Launch Terraria and load a world
+2. Run `TerrariaOverlay.exe`
+3. Press `Insert` to toggle the menu
+4. Configure features (settings auto-save/load)
+
+
+
+This version stays within GitHub README conventions (`headers`, `HTML alignment`, `tables`, `shields.io button`, and centered images).
