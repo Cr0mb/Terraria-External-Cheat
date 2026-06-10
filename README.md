@@ -4,13 +4,7 @@
 
 ### Fully external ImGui (DX11) overlay menu for Terraria 1.4.5.6
 
-<br>
 
-<a href="https://www.unknowncheats.me/forum/downloads.php?do=file&id=55519">
-<img src="https://img.shields.io/badge/DOWNLOAD-D32F2F?style=for-the-badge">
-</a>
-
-</div>
 
 ---
 
