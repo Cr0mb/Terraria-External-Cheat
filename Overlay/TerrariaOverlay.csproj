@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <!-- x86 so ClrMD can attach to 32-bit Terraria IN-PROCESS (no separate helper exe). -->
+    <Platforms>x86</Platforms>
+    <PlatformTarget>x86</PlatformTarget>
+    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>GVoid</AssemblyName>
+    <ApplicationIcon>D:\GHaxLabs\Terrraria\ghaxloader.ico</ApplicationIcon>
+
+    <!-- Single self-contained exe: everything bundled, native libs self-extract to a temp cache. -->
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <!-- Trim the .NET framework (the bulk) to fit under 30MB. Partial mode keeps third-party
+         assemblies (ClrMD, ImGui.NET) whole so their reflection isn't broken. -->
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>partial</TrimMode>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\Core\GameMemory.cs" />
+    <Compile Include="..\Core\Offsets.cs" />
+    <Compile Include="..\Core\Resolver.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ClickableTransparentOverlay" Version="9.*" />
+    <PackageReference Include="Microsoft.Diagnostics.Runtime" Version="3.1.*" />
+  </ItemGroup>
+</Project>

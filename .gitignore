@@ -1,0 +1,17 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+dist/
+*.user
+*.suo
+
+# Self-test artifact
+gvoid_selftest.txt
+
+# Local config / state
+gvoid_config.txt
+
+# IDE
+.vs/
+.idea/
+*.csproj.user
