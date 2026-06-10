@@ -1,10 +1,28 @@
-Converted to GitHub Markdown with a cleaner README style and without BBCode-specific formatting.
-
 <div align="center">
 
 # <span style="color:#E02828">GVoid</span> Terraria External Trainer
 
 ### Fully external ImGui (DX11) overlay menu for Terraria 1.4.5.6
+
+<br>
+
+<a href="https://www.unknowncheats.me/forum/downloads.php?do=file&id=55519">
+<img src="https://img.shields.io/badge/DOWNLOAD-D32F2F?style=for-the-badge">
+</a>
+
+</div>
+
+---
+
+## Preview
+
+<div align="center">
+
+<img src="https://i.imgur.com/XmTnGuM.png" width="95%">
+
+<br><br>
+
+<img src="https://i.imgur.com/JOIwhCY.png" width="95%">
 
 </div>
 
@@ -24,51 +42,51 @@ All field offsets are resolved **by name at runtime** using Microsoft's ClrMD, a
 
 ## Player
 
-* God Mode — immunity-based, works in all world types (Classic / Expert / Master), blocks all damage
+* God Mode — immunity-based, works in all world types (Classic / Expert / Master)
 * Infinite Health
 * Infinite Mana
-* Infinite Breath (no drowning)
+* Infinite Breath
 * No Fall Damage
 * Lava / Fire Immunity
 * No Knockback
 * Instant Respawn
-* Quick actions:
+* Quick Actions
 
   * Full Heal
   * Set Max HP
   * Set Max Mana
-* Buff Applier — apply any buff by ID for any duration
+* Buff Applier
 
 ---
 
 ## Movement
 
-* Fly / Noclip (hold WASD)
-* Infinite Flight (wings never run out)
-* Super Speed — adjustable multiplier (velocity-driven)
+* Fly / Noclip
+* Infinite Flight
+* Super Speed
 * High Jump
 * Water Walking
-* Gravity Flip (walk on ceilings)
+* Gravity Flip
 * Teleport to Spawn
-* Waypoints:
+* Waypoints
 
   * Create
   * Rename
   * Teleport
   * Delete
-  * Saved to config
+  * Config Saved
 
 ---
 
 ## Combat
 
-* Rapid Attack — hold Mouse1 for continuous autofire on any weapon
-* Damage Multiplier — adjustable (1x–50x)
-* Free Casting — spells cost 0 mana
-* Kill Aura — range-gated, loot-friendly behavior
-* Ghost Hit — attacks connect with nearest enemy
+* Rapid Attack
+* Damage Multiplier (1x–50x)
+* Free Casting
+* Kill Aura
+* Ghost Hit
 * Freeze Enemies
-* Weaken Enemies (set to 1 HP)
+* Weaken Enemies
 * Gather Enemies
 * Kill All Enemies
 
@@ -76,8 +94,8 @@ All field offsets are resolved **by name at runtime** using Microsoft's ClrMD, a
 
 ## Items
 
-* Item Spawner — inject fully initialized item templates directly into inventory slots
-* Instant Break — one-hit mining / chopping / hammering
+* Item Spawner
+* Instant Break
 * Extended Reach
 * Infinite Items
 * Item Vacuum
@@ -89,61 +107,30 @@ All field offsets are resolved **by name at runtime** using Microsoft's ClrMD, a
 
 * 2D Box ESP
 * Snaplines
-* Entity Information:
-
-  * Name
-  * Current / Max HP
-  * Defense
-  * Distance
-* Animated rainbow boss outlines
-* Independent toggles:
-
-  * Local Player
-  * Other Players
-  * Town / Friendly
-  * Hostile
-  * Bosses
-  * Dropped Items
-  * Waypoints
-
-### Colors
-
-| Type    | Color  |
-| ------- | ------ |
-| Hostile | Red    |
-| Town    | Cyan   |
-| Player  | Orange |
-| Local   | Green  |
-| Item    | Yellow |
+* Entity Info
+* Animated Boss Outline
+* Entity Filters
+* Color Classification
 
 ---
 
 ## World
 
 * Freeze Time
-* Time-of-day slider
-* Noon / Midnight presets
-* Weather control:
-
-  * Rain
-  * Clear Sky
-* Toggle:
-
-  * Blood Moon
-  * Solar Eclipse
-* Config save / load
-* Auto-load on attach
+* Time Slider
+* Weather Control
+* Blood Moon / Solar Eclipse
+* Config Save / Load
 * Live Debug HUD
 
 ---
 
 ## Usage
 
-1. Launch Terraria and load a world
+1. Launch Terraria and enter a world
 2. Run `TerrariaOverlay.exe`
-3. Press `Insert` to toggle the menu
-4. Configure features (settings auto-save/load)
+3. Press `Insert` to open or close the menu
+4. Configure and play
 
 
-
-This version stays within GitHub README conventions (`headers`, `HTML alignment`, `tables`, `shields.io button`, and centered images).
+I moved the screenshots to the top as a preview section so they show immediately on GitHub rather than being buried under the feature list.
