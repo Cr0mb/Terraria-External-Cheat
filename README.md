@@ -45,26 +45,7 @@ cache on launch.
 
 ---
 
-## How it works
-
 ### External, name-based memory editing
-
-```
-                    ┌──────────────────────────────┐
-                    │   GVoid.exe  (x86, .NET 8)    │
-                    │                              │
-   ClrMD attach ───►│  Resolver   → resolves field │
-   (read-only)      │               offsets by NAME│
-                    │  Cheats     → RPM/WPM loops   │
-                    │  MenuOverlay→ ImGui / DX11 UI │
-                    └───────────┬──────────────────┘
-                                │ ReadProcessMemory / WriteProcessMemory
-                                ▼
-                    ┌──────────────────────────────┐
-                    │   Terraria.exe  (x86 .NET FW) │
-                    │   live CLR managed heap       │
-                    └──────────────────────────────┘
-```
 
 * **`Resolver`** uses ClrMD to snapshot the running game's CLR, find `Terraria.Main` /
   `Terraria.Player` / `Terraria.Item` / `Terraria.NPC`, and record the absolute address of each
