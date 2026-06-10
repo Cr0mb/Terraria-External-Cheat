@@ -43,10 +43,6 @@ The entire thing ships as **one self-contained `GVoid.exe`** (~12 MB). No .NET r
 no loose DLLs, no config files required on disk — native dependencies self-extract to a temp
 cache on launch.
 
-> **Educational / single-player use only.** GVoid is a memory-editing study project for
-> offline, single-player Terraria. It deliberately contains no multiplayer packet manipulation
-> or anything aimed at disrupting other players. See [Disclaimer](#disclaimer).
-
 ---
 
 ## How it works
@@ -264,13 +260,5 @@ the .NET framework (the bulk of the size) while keeping the reflection-heavy thi
 * **God Mode + healing** are intentionally kept separate — God Mode is full damage immunity, not an
   auto-heal.
 
----
-
-## Disclaimer
-
-This project is provided for **educational purposes** and for use in **single-player / offline**
-Terraria only. It demonstrates external process memory reading/writing and runtime CLR offset
-resolution with ClrMD. Do not use it to interfere with other players or in any online context.
-You are responsible for how you use it.
 
 Not affiliated with Re-Logic or Terraria.
